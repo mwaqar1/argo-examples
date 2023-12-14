@@ -1,5 +1,5 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Rollout
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: {{ .Values.appName }}
   labels:
@@ -15,7 +15,7 @@ spec:
       labels:
         app: {{ .Values.appName }}
         tier: frontend
-    spec:
+    spec: # Pod spec
       containers:
       - name: mycontainer
         image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
@@ -31,10 +31,3 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "100m"
-  strategy:
-    canary:
-      steps:
-      - setWeight: 20
-      - pause: {duration: 10s}
-      - setWeight: 40
-      - pause: {duration: 20s}
